@@ -1,0 +1,2069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Learning Platform - Vaz World</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            text-align: center;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+        
+        /* Landing Page */
+        .landing-page {
+            text-align: center;
+        }
+        
+        #startBtn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 50px;
+            font-size: 1.3rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin: 30px 0;
+            font-weight: bold;
+        }
+        
+        #startBtn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        /* Menu Section */
+        .menu-section {
+            text-align: center;
+        }
+        
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+        
+        .menu-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 1.3rem;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .menu-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+        
+        .menu-card.business {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .menu-card.marketing {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .menu-card.reaction {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        .menu-card.general {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        
+        .menu-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        
+        /* Reaction Section */
+        .reaction-section {
+            width: 100%;
+        }
+        
+        .input-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .input-section label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+            text-align: left;
+        }
+        
+        .input-section input {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .input-section input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #7f8c8d;
+            transform: translateY(-2px);
+        }
+        
+        .btn-reset {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .btn-reset:hover {
+            background: #c0392b;
+        }
+        
+        /* Elements Grid */
+        .elements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+        }
+        
+        .element-btn {
+            padding: 15px 10px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            font-size: 0.85rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80px;
+        }
+        
+        .element-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .element-btn.selected {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border-color: #4facfe;
+            transform: scale(1.1);
+        }
+        
+        .element-symbol {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .element-number {
+            font-size: 0.7rem;
+            color: #999;
+        }
+        
+        .element-btn.selected .element-number {
+            color: rgba(255,255,255,0.8);
+        }
+        
+        /* 3D Container */
+        #canvas3d {
+            width: 100%;
+            height: 400px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin: 20px 0;
+            background: #f0f0f0;
+        }
+        
+        /* Reaction Display */
+        .reaction-display {
+            margin-top: 30px;
+            padding: 30px;
+            background: white;
+            border: 3px solid #667eea;
+            border-radius: 10px;
+        }
+        
+        .reaction-display.hidden {
+            display: none;
+        }
+        
+        .reaction-header {
+            font-size: 1.8rem;
+            color: #667eea;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .reaction-formula {
+            font-size: 1.5rem;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            color: #2c3e50;
+        }
+        
+        .reaction-info {
+            color: #555;
+            margin-top: 15px;
+            padding: 20px;
+            background: #e8f4f8;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            border-left: 4px solid #3498db;
+            text-align: left;
+        }
+        
+        .reaction-info h3 {
+            color: #2980b9;
+            margin-bottom: 10px;
+        }
+        
+        .reaction-info p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        
+        /* Reaction Conditions */
+        .reaction-conditions {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f0f8ff;
+            border: 2px solid #4facfe;
+            border-radius: 10px;
+        }
+        
+        .conditions-title {
+            font-size: 1.3rem;
+            color: #4facfe;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        .conditions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .condition-btn {
+            padding: 12px;
+            background: white;
+            border: 2px solid #4facfe;
+            color: #4facfe;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+        
+        .condition-btn:hover {
+            background: #4facfe;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .condition-btn.active {
+            background: #4facfe;
+            color: white;
+        }
+        
+        .condition-info {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #4facfe;
+            margin-top: 15px;
+        }
+        
+        .condition-info h4 {
+            color: #4facfe;
+            margin-bottom: 10px;
+        }
+        
+        .condition-info p {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+        
+        /* Topic Cards */
+        .knowledge-topic-card,
+        .business-topic-card,
+        .marketing-topic-card {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border: 2px solid #4facfe;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .knowledge-topic-card:hover,
+        .business-topic-card:hover,
+        .marketing-topic-card:hover {
+            box-shadow: 0 5px 20px rgba(79, 172, 254, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .knowledge-topic-card h3,
+        .business-topic-card h3,
+        .marketing-topic-card h3 {
+            color: #4facfe;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+        
+        .knowledge-topic-card p,
+        .business-topic-card p,
+        .marketing-topic-card p {
+            color: #666;
+            margin-bottom: 0;
+        }
+        
+        .topic-details {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #e0e0e0;
+        }
+        
+        .topic-details.hidden {
+            display: none;
+        }
+        
+        .factor-item {
+            background: #f9f9f9;
+            padding: 12px;
+            margin: 10px 0;
+            border-left: 4px solid #4facfe;
+            border-radius: 5px;
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .back-btn {
+            background: #95a5a6;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .back-btn:hover {
+            background: #7f8c8d;
+        }
+        
+        .info-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: left;
+        }
+        
+        .info-box strong {
+            color: #856404;
+        }
+        
+        .selected-elements {
+            background: #d4edda;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: left;
+            border: 2px solid #28a745;
+        }
+        
+        .selected-elements strong {
+            color: #155724;
+        }
+        
+        .element-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .element-tag {
+            background: #28a745;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .product-section {
+            background: linear-gradient(135deg, #ffd700 0%, #ffa500 100%);
+            color: #333;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 3px solid #ff8c00;
+        }
+
+        .product-section h3 {
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            color: #8b4513;
+            font-weight: bold;
+        }
+
+        .product-name {
+            background: white;
+            color: #667eea;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 15px 0;
+            border: 3px solid #667eea;
+        }
+
+        .product-section p {
+            margin-top: 10px;
+            line-height: 1.6;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        .element-details {
+            background: #e8f4f8;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #3498db;
+        }
+
+        .element-detail-item {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+
+        .element-detail-item strong {
+            color: #2980b9;
+        }
+
+        .balanced-atoms {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            color: white;
+        }
+
+        .balanced-atoms h3 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .atom-breakdown {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #canvas3dProduct {
+            width: 100%;
+            height: 450px;
+            border: 3px solid #ffa500;
+            border-radius: 15px;
+            margin: 20px 0;
+            background: linear-gradient(135deg, #fff9e6 0%, #ffe6cc 100%);
+        }
+
+        .product-visualization {
+            background: linear-gradient(135deg, #ffd700 0%, #ffa500 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 3px solid #ff8c00;
+        }
+
+        .product-visualization h3 {
+            color: #8b4513;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Landing Page -->
+        <div class="landing-page" id="landingPage">
+            <h1>🌍 Welcome to Vaz World</h1>
+            <p class="subtitle">Your Gateway to Knowledge</p>
+            <p style="color: #666; margin-bottom: 20px;">Explore Business, Marketing, Chemical Reactions, and General Knowledge</p>
+            <button id="startBtn">Let's Go 🚀</button>
+        </div>
+
+        <!-- Menu Section -->
+        <div class="menu-section hidden" id="menuSection">
+            <h1>What Would You Like to Learn?</h1>
+            <p class="subtitle">Choose a category to explore</p>
+            <div class="menu-grid">
+                <button class="menu-card business" onclick="selectCategory('business')">
+                    <div class="menu-icon">💼</div>
+                    <div>Business</div>
+                </button>
+                <button class="menu-card marketing" onclick="selectCategory('marketing')">
+                    <div class="menu-icon">📊</div>
+                    <div>Marketing</div>
+                </button>
+                <button class="menu-card reaction" onclick="selectCategory('reaction')">
+                    <div class="menu-icon">⚛️</div>
+                    <div>Element Reactions</div>
+                </button>
+                <button class="menu-card general" onclick="selectCategory('general')">
+                    <div class="menu-icon">🧠</div>
+                    <div>General Knowledge</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Reaction Learning Section -->
+        <div class="reaction-section hidden" id="reactionSection">
+            <button class="back-btn" onclick="goBack()">← Back</button>
+            
+            <h1>⚛️ Chemical Element Reactions Explorer</h1>
+            <p class="subtitle">Learn about chemical reactions by combining elements</p>
+
+            <!-- Step 1: Input Number -->
+            <div class="input-section" id="step1">
+                <label for="elementCount">How many elements do you want to combine?</label>
+                <input type="number" id="elementCount" min="2" max="5" value="2" placeholder="Enter number between 2-5">
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="proceedToSelection()">Next →</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Select Elements -->
+            <div class="input-section hidden" id="step2">
+                <label>Select Elements (Click on elements below)</label>
+                <div class="info-box">
+                    <strong>Note:</strong> <span id="selectionNote">Select 2 elements to continue</span>
+                </div>
+                <div class="elements-grid" id="elementsGrid"></div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="showReaction()" id="showReactionBtn" disabled>Show Reaction</button>
+                    <button class="btn btn-secondary" onclick="goBack()">Back</button>
+                </div>
+            </div>
+
+            <!-- Step 3: 3D Visualization -->
+            <div class="hidden" id="step3">
+                <div id="canvas3d"></div>
+            </div>
+
+            <!-- Step 4: Reaction Results -->
+            <div class="reaction-display hidden" id="reactionDisplay">
+                <div class="reaction-header">Reaction Details</div>
+                
+                <div class="selected-elements">
+                    <strong>Selected Elements:</strong>
+                    <div class="element-list" id="selectedElementsList"></div>
+                </div>
+
+                <div class="element-details" id="elementDetailsSection">
+                    <h3>📋 Element Information</h3>
+                    <div id="elementDetailsContent"></div>
+                </div>
+                
+                <div class="reaction-formula" id="reactionFormula"></div>
+
+                <div class="balanced-atoms" id="balancedAtomsSection">
+                    <h3>⚗️ Atom Balance Breakdown</h3>
+                    <div id="atomBalance"></div>
+                </div>
+
+                <div class="product-section hidden" id="productSection">
+                    <h3>🧪 Product Formed:</h3>
+                    <div class="product-name" id="productName"></div>
+                    <p id="productInfo"></p>
+                </div>
+
+                <div class="product-visualization hidden" id="productVisualization">
+                    <h3>🎨 3D Product Molecule Visualization</h3>
+                    <div id="canvas3dProduct"></div>
+                </div>
+
+                <div class="reaction-conditions hidden" id="reactionConditions">
+                    <div class="conditions-title">🌡️ Reaction Conditions</div>
+                    <p style="color: #666; margin-bottom: 15px;">Click on a condition to learn how it affects this reaction:</p>
+                    <div class="conditions-grid" id="conditionsGrid"></div>
+                    <div class="condition-info" id="conditionInfo" style="display: none;"></div>
+                </div>
+                
+                <div class="reaction-info">
+                    <h3>About this Reaction:</h3>
+                    <p id="reactionDescription"></p>
+                    <h3>Key Points:</h3>
+                    <p id="reactionReason"></p>
+                    <h3>Practical Applications:</h3>
+                    <p id="reactionApplication"></p>
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="resetReaction()">Try Another Reaction</button>
+                    <button class="btn btn-secondary" onclick="goBack()">Back to Menu</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Business Section -->
+        <div class="hidden" id="businessSection">
+            <button class="back-btn" onclick="goBack()">← Back</button>
+            <h1>💼 Business Learning Module</h1>
+            <p class="subtitle">Explore key business concepts and strategies</p>
+            <div style="max-width: 900px; margin: 0 auto;">
+                <div class="business-topic-card" onclick="toggleBusinessTopic('entrepreneurship', this)">
+                    <h3>🚀 Entrepreneurship</h3>
+                    <p>Starting and growing your own business venture with innovation and risk management.</p>
+                    <div class="topic-details hidden">
+                        <div class="factor-item"><strong>💡 Innovation:</strong> Creating unique value propositions and identifying market gaps. Success factors: creativity, market research, customer feedback.</div>
+                        <div class="factor-item"><strong>📈 Growth Strategy:</strong> Scaling operations through market expansion, product development, and strategic partnerships. Key metrics: revenue growth, market share, customer acquisition.</div>
+                        <div class="factor-item"><strong>⚠️ Risk Management:</strong> Identifying and mitigating business risks. Types: financial, operational, market, reputational risks.</div>
+                        <div class="factor-item"><strong>💰 Funding:</strong> Securing capital through bootstrapping, angel investors, venture capital, or loans. Each has different requirements and expectations.</div>
+                        <div class="factor-item"><strong>🎯 Business Model:</strong> How your business creates, delivers, and captures value. Models: B2B, B2C, SaaS, marketplace, subscription.</div>
+                    </div>
+                </div>
+
+                <div class="business-topic-card" onclick="toggleBusinessTopic('management', this)">
+                    <h3>👔 Management</h3>
+                    <p>Effective strategies for leading teams, organizing resources, and achieving organizational goals.</p>
+                    <div class="topic-details hidden">
+                        <div class="factor-item"><strong>👥 Team Leadership:</strong> Building high-performing teams through motivation, clear goals, and feedback. Leadership styles: authoritative, democratic, delegative.</div>
+                        <div class="factor-item"><strong>📊 Decision Making:</strong> Data-driven decisions using analytics and business intelligence. Process: analysis, evaluation, implementation, monitoring.</div>
+                        <div class="factor-item"><strong>🎓 Employee Development:</strong> Training, mentoring, and career growth opportunities. Impact: retention, productivity, company culture.</div>
+                        <div class="factor-item"><strong>⚙️ Process Optimization:</strong> Streamlining operations through automation, lean methodologies, and continuous improvement (Kaizen).</div>
+                        <div class="factor-item"><strong>📈 Performance Metrics:</strong> KPIs for measuring team and individual performance. Common metrics: productivity, quality, efficiency, customer satisfaction.</div>
+                    </div>
+                </div>
+
+                <div class="business-topic-card" onclick="toggleBusinessTopic('finance', this)">
+                    <h3>💳 Finance</h3>
+                    <p>Understanding budgeting, cash flow, investments, and financial decision-making.</p>
+                    <div class="topic-details hidden">
+                        <div class="factor-item"><strong>💰 Budgeting:</strong> Planning and allocating financial resources. Types: zero-based, activity-based, rolling forecasts.</div>
+                        <div class="factor-item"><strong>💵 Cash Flow Management:</strong> Monitoring money in and out of business. Critical for: payroll, operations, growth investments.</div>
+                        <div class="factor-item"><strong>📊 Financial Statements:</strong> Income statement, balance sheet, cash flow statement. Used for: analysis, reporting, decision-making.</div>
+                        <div class="factor-item"><strong>📈 Investment Decisions:</strong> Evaluating ROI, NPV, payback periods. Factors: risk tolerance, time horizon, growth potential.</div>
+                        <div class="factor-item"><strong>💳 Debt vs Equity:</strong> Financing options with different implications. Debt: fixed obligations, tax deductible. Equity: ownership dilution, no repayment required.</div>
+                    </div>
+                </div>
+
+                <div class="business-topic-card" onclick="toggleBusinessTopic('supply', this)">
+                    <h3>📦 Supply Chain</h3>
+                    <p>Managing the flow of products from manufacturer to end consumer efficiently.</p>
+                    <div class="topic-details hidden">
+                        <div class="factor-item"><strong>🏭 Production Planning:</strong> Forecasting demand and scheduling production. Methods: MRP, JIT, demand-driven planning.</div>
+                        <div class="factor-item"><strong>📍 Logistics & Distribution:</strong> Moving products efficiently from warehouse to customer. Channels: direct, retail, online, multichannel.</div>
+                        <div class="factor-item"><strong>🤝 Supplier Management:</strong> Building relationships with suppliers for quality and cost. Strategies: negotiation, contracts, performance metrics.</div>
+                        <div class="factor-item"><strong>📦 Inventory Management:</strong> Balancing stock levels to meet demand while minimizing costs. Challenge: avoiding stockouts and excess inventory.</div>
+                        <div class="factor-item"><strong>🌍 Global Supply Chain:</strong> Managing international operations. Factors: tariffs, shipping costs, customs, geopolitical risks.</div>
+                    </div>
+                </div>
+
+                <div class="business-topic-card" onclick="toggleBusinessTopic('customer', this)">
+                    <h3>❤️ Customer Relations</h3>
+                    <p>Building and maintaining strong relationships with clients for long-term success.</p>
+                    <div class="topic-details hidden">
+                        <div class="factor-item"><strong>😊 Customer Service:</strong> Responsive, helpful support across all touchpoints. Key: speed, quality, consistency, empathy.</div>
+                        <div class="factor-item"><strong>💌 Engagement:</strong> Regular communication and personalized interactions. Channels: email, social media, customer portals, events.</div>
+                        <div class="factor-item"><strong>🎁 Loyalty Programs:</strong> Rewarding repeat customers. Benefits: increased lifetime value, brand advocacy, data collection.</div>
+                        <div class="factor-item"><strong>📊 CRM Systems:</strong> Managing customer data and interactions. Enables: personalization, predictive analytics, improved service.</div>
+                        <div class="factor-item"><strong>⭐ Feedback & Improvement:</strong> Collecting and acting on customer feedback. Methods: surveys, reviews, focus groups, social listening.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="goBack()">Back to Menu</button>
+            </div>
+        </div>
+
+        <!-- Marketing Section -->
+        <div class="hidden" id="marketingSection">
+            <button class="back-btn" onclick="goBack()">← Back</button>
+            <h1>📊 Marketing Learning Module</h1>
+            <p class="subtitle">Master marketing strategies and consumer psychology</p>
+            <div style="text-align: center; margin-bottom: 20px; padding: 10px; background: #fff9e6; border-radius: 8px;">
+                <p style="color: #e65100; font-weight: bold;">📅 Today's Focus: <span id="marketingFocus"></span></p>
+            </div>
+            <div style="max-width: 900px; margin: 0 auto;">
+                <div class="marketing-topic-card" onclick="toggleMarketingTopic('digital', this)">
+                    <h3>💻 Digital Marketing</h3>
+                    <p>Leverage social media, email, and online platforms to reach your audience.</p>
+                    <div class="topic-details hidden">
+                        <div class="factor-item"><strong>📱 Social Media Marketing:</strong> Using platforms like Instagram, TikTok, LinkedIn, Facebook. Strategy: content calendar, engagement, influencer partnerships, community building.</div>
+                        <div class="factor-item"><strong>✉️ Email Marketing:</strong> Direct communication with segmented audiences. Best practices: personalization, A/B testing, automation, mobile optimization.</div>
+                        <div class="factor-item"><strong>🌐 Website Optimization:</strong> Conversion rate optimization, user experience, load speed. Tools: analytics, heatmaps, A/B testing.</div>
+                        <div class="factor-item"><strong>📊 Marketing Automation:</strong> Using tools to nurture leads and automate campaigns. Benefits: efficiency, consistency, better ROI tracking.</div>
+                        <div class="factor-item"><strong>📈 Analytics & Tracking:</strong> Measuring performance through KPIs and metrics. Metrics: CTR, conversion rate, CAC, ROAS, engagement rate.</div>
+                    </div>
+                </div>
+
+                <div class="marketing-topic-card" onclick="toggleMarketingTopic('seo', this)">
+                    <h3>🔍 SEO & SEM</h3>
+                    <p>Optimize visibility in search engines and create targeted advertising campaigns.</p>
+                    <div class="topic-details hidden">
+                        <div class="factor-item"><strong>🔎 SEO Strategy:</strong> On-page optimization (keywords, titles, meta), off-page (backlinks), technical SEO. Goal: organic search visibility.</div>
+                        <div class="factor-item"><strong>💰 SEM & Paid Ads:</strong> Google Ads, Bing Ads, display networks. Strategy: keyword bidding, ad copy optimization, landing page quality.</div>
+                        <div class="factor-item"><strong>🎯 Keyword Research:</strong> Finding high-intent keywords with good search volume. Tools: SEMrush, Ahrefs, Google Keyword Planner.</div>
+                        <div class="factor-item"><strong>📝 Content for Search:</strong> Creating SEO-friendly content that ranks. Principles: relevance, quality, user intent matching, E-E-A-T (Experience, Expertise, Authoritativeness, Trustworthiness).</div>
+                        <div class="factor-item"><strong>⚙️ Technical SEO:</strong> Site speed, mobile responsiveness, structured data, URL structure. Impacts: crawlability, indexing, ranking.</div>
+                    </div>
+                </div>
+
+                <div class="marketing-topic-card" onclick="toggleMarketingTopic('brand', this)">
+                    <h3>🎨 Brand Strategy</h3>
+                    <p>Develop a strong brand identity and positioning in the market.</p>
+                    <div class="topic-details hidden">
+                        <div class="factor-item"><strong>🏷️ Brand Identity:</strong> Logo, colors, typography, voice, values. Consistency across: website, social media, packaging, communications.</div>
+                        <div class="factor-item"><strong>📍 Positioning:</strong> Unique place in market relative to competitors. Defined by: value proposition, target audience, key differentiators.</div>
+                        <div class="factor-item"><strong>💡 Brand Story:</strong> Authentic narrative connecting with audience emotionally. Elements: origin, mission, values, customer success stories.</div>
+                        <div class="factor-item"><strong>🎯 Target Audience:</strong> Detailed personas defining ideal customers. Includes: demographics, psychographics, pain points, aspirations.</div>
+                        <div class="factor-item"><strong>📈 Brand Equity:</strong> Value of brand name in market. Built through: quality, consistency, customer loyalty, positive associations.</div>
+                    </div>
+                </div>
+
+                <div class="marketing-topic-card" onclick="toggleMarketingTopic('content', this)">
+                    <h3>📝 Content Marketing</h3>
+                    <p>Create valuable content to attract and engage your target audience.</p>
+                    <div class="topic-details hidden">
+                        <div class="factor-item"><strong>📚 Content Types:</strong> Blog posts, videos, podcasts, infographics, whitepapers, case studies. Choose based on: audience preference, platform, topic complexity.</div>
+                        <div class="factor-item"><strong>📅 Content Calendar:</strong> Planning content in advance for consistency. Factors: seasonality, product launches, trending topics, evergreen content.</div>
+                        <div class="factor-item"><strong>🎬 Storytelling:</strong> Using narrative to connect with audience. Techniques: customer stories, problem-solution-benefit framework, emotional appeal.</div>
+                        <div class="factor-item"><strong>🔄 Content Distribution:</strong> Getting content to right audience at right time. Channels: owned (website, email), earned (PR, shares), paid (ads).</div>
+                        <div class="factor-item"><strong>📊 Content Performance:</strong> Measuring effectiveness and ROI. Metrics: views, engagement, shares, leads generated, conversions.</div>
+                    </div>
+                </div>
+
+                <div class="marketing-topic-card" onclick="toggleMarketingTopic('research', this)">
+                    <h3>🔬 Market Research</h3>
+                    <p>Understand consumer needs, preferences, and market trends through data analysis.</p>
+                    <div class="topic-details hidden">
+                        <div class="factor-item"><strong>📊 Quantitative Research:</strong> Surveys, polls, analytics data. Provides: statistical insights, trend identification, large sample sizes.</div>
+                        <div class="factor-item"><strong>🗣️ Qualitative Research:</strong> Interviews, focus groups, ethnography. Provides: deep insights, understanding motivations, context.</div>
+                        <div class="factor-item"><strong>🎯 Competitor Analysis:</strong> Studying competitors' strategies, strengths, weaknesses. Tools: SWOT, Porter's Five Forces, benchmarking.</div>
+                        <div class="factor-item"><strong>📈 Trend Analysis:</strong> Identifying emerging patterns and future directions. Methods: social listening, data mining, pattern recognition.</div>
+                        <div class="factor-item"><strong>👥 Consumer Psychology:</strong> Understanding why people buy. Factors: needs, emotions, social proof, scarcity, reciprocity.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="goBack()">Back to Menu</button>
+            </div>
+        </div>
+
+        <!-- General Knowledge Section -->
+        <div class="hidden" id="generalSection">
+            <button class="back-btn" onclick="goBack()">← Back</button>
+            <h1>🧠 General Knowledge Module</h1>
+            <p class="subtitle">Expand your knowledge across various fascinating topics</p>
+            <div style="max-width: 900px; margin: 0 auto;">
+                <div class="knowledge-topic-card" onclick="toggleKnowledgeTopic('history', this)">
+                    <h3>📚 History</h3>
+                    <p>Learn about significant historical events, civilizations, and their impact on the modern world.</p>
+                    <div class="topic-details hidden">
+                        <div class="factor-item"><strong>🏛️ Ancient Civilizations:</strong> Egypt, Mesopotamia, Greece, Rome. Contributions: writing, law, philosophy, architecture.</div>
+                        <div class="factor-item"><strong>⚔️ Historical Periods:</strong> Medieval, Renaissance, Industrial Revolution, Modern Era. Each marked by: technological, social, political changes.</div>
+                        <div class="factor-item"><strong>🌍 Colonization & Empires:</strong> Global expansion and its effects. Impact: cultural exchange, resource exploitation, geopolitical boundaries.</div>
+                        <div class="factor-item"><strong>⚡ Revolutionary Movements:</strong> French Revolution, American Independence, Industrial Revolution. Results: democracy, human rights, economic transformation.</div>
+                        <div class="factor-item"><strong>🌐 Modern History:</strong> 20th-21st centuries - wars, Cold War, globalization. Shaped: current world order, international relations, technology.</div>
+                    </div>
+                </div>
+
+                <div class="knowledge-topic-card" onclick="toggleKnowledgeTopic('science', this)">
+                    <h3>🔬 Science</h3>
+                    <p>Explore physics, biology, chemistry, and environmental science concepts.</p>
+                    <div class="topic-details hidden">
+                        <div class="factor-item"><strong>🌌 Physics:</strong> Laws of motion, gravity, energy, relativity, quantum mechanics. Explains: universe behavior, technology, natural phenomena.</div>
+                        <div class="factor-item"><strong>🧬 Biology:</strong> Life, cells, genetics, evolution, ecosystems. Foundation for: medicine, agriculture, conservation.</div>
+                        <div class="factor-item"><strong>⚛️ Chemistry:</strong> Matter, reactions, bonds, atomic structure. Applications: medicines, materials, fuels, food chemistry.</div>
+                        <div class="factor-item"><strong>🌍 Environmental Science:</strong> Ecosystems, climate, pollution, sustainability. Critical for: addressing climate change, resource management.</div>
+                        <div class="factor-item"><strong>🚀 Space & Astronomy:</strong> Planets, stars, galaxies, cosmology. Discoveries: expanding universe, exoplanets, cosmic radiation.</div>
+                    </div>
+                </div>
+
+                <div class="knowledge-topic-card" onclick="toggleKnowledgeTopic('geography', this)">
+                    <h3>🗺️ Geography</h3>
+                    <p>Understand world geography, climate zones, natural resources, and geopolitics.</p>
+                    <div class="topic-details hidden">
+                        <div class="factor-item"><strong>🏔️ Physical Geography:</strong> Landforms, mountains, rivers, oceans, deserts. Shaped by: tectonic activity, weather, erosion.</div>
+                        <div class="factor-item"><strong>🌤️ Climate & Weather:</strong> Climate zones, seasons, weather patterns. Influences: agriculture, human settlement, economy.</div>
+                        <div class="factor-item"><strong>⛰️ Natural Resources:</strong> Minerals, fossil fuels, forests, water. Management: extraction, conservation, sustainability.</div>
+                        <div class="factor-item"><strong>🌆 Human Geography:</strong> Populations, cities, culture, economics. Studies: migration, urbanization, cultural diversity.</div>
+                        <div class="factor-item"><strong>🌐 Geopolitics:</strong> Political boundaries, territorial disputes, international relations. Factors: resources, strategic location, historical conflicts.</div>
+                    </div>
+                </div>
+
+                <div class="knowledge-topic-card" onclick="toggleKnowledgeTopic('technology', this)">
+                    <h3>💡 Technology</h3>
+                    <p>Stay updated with emerging technologies, AI, blockchain, and digital transformation.</p>
+                    <div class="topic-details hidden">
+                        <div class="factor-item"><strong>🤖 Artificial Intelligence:</strong> Machine learning, neural networks, NLP. Applications: automation, prediction, decision-making, content generation.</div>
+                        <div class="factor-item"><strong>🔗 Blockchain:</strong> Distributed ledger, cryptocurrency, smart contracts. Uses: secure transactions, transparency, decentralization.</div>
+                        <div class="factor-item"><strong>☁️ Cloud Computing:</strong> On-demand resources, SaaS, infrastructure. Benefits: scalability, cost efficiency, accessibility.</div>
+                        <div class="factor-item"><strong>📱 Internet of Things (IoT):</strong> Connected devices, sensors, data collection. Applications: smart homes, industry 4.0, healthcare monitoring.</div>
+                        <div class="factor-item"><strong>🔐 Cybersecurity:</strong> Data protection, encryption, threat detection. Critical for: privacy, business continuity, national security.</div>
+                    </div>
+                </div>
+
+                <div class="knowledge-topic-card" onclick="toggleKnowledgeTopic('culture', this)">
+                    <h3>🎭 Culture & Arts</h3>
+                    <p>Discover world cultures, literature, art movements, and their historical significance.</p>
+                    <div class="topic-details hidden">
+                        <div class="factor-item"><strong>📖 Literature:</strong> Writing traditions, famous authors, genres. Impact: reflecting society, preserving history, inspiring change.</div>
+                        <div class="factor-item"><strong>🎨 Visual Arts:</strong> Painting, sculpture, photography, design. Movements: Renaissance, Impressionism, Modernism, Contemporary art.</div>
+                        <div class="factor-item"><strong>🎵 Music:</strong> Genres, composers, cultural significance. Reflects: emotions, traditions, social movements, innovation.</div>
+                        <div class="factor-item"><strong>🎬 Film & Entertainment:</strong> Cinema history, storytelling, cultural influence. Power: global communication, cultural representation, social commentary.</div>
+                        <div class="factor-item"><strong>🌍 Cultural Diversity:</strong> Traditions, beliefs, languages, customs. Importance: understanding, respect, enrichment of global society.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="goBack()">Back to Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Periodic Table Data - All 118 Elements
+        const elements = [
+            {symbol: 'H', name: 'Hydrogen', number: 1, group: 'nonmetal'},
+            {symbol: 'He', name: 'Helium', number: 2, group: 'noble gas'},
+            {symbol: 'Li', name: 'Lithium', number: 3, group: 'alkali metal'},
+            {symbol: 'Be', name: 'Beryllium', number: 4, group: 'alkaline earth'},
+            {symbol: 'B', name: 'Boron', number: 5, group: 'metalloid'},
+            {symbol: 'C', name: 'Carbon', number: 6, group: 'nonmetal'},
+            {symbol: 'N', name: 'Nitrogen', number: 7, group: 'nonmetal'},
+            {symbol: 'O', name: 'Oxygen', number: 8, group: 'nonmetal'},
+            {symbol: 'F', name: 'Fluorine', number: 9, group: 'halogen'},
+            {symbol: 'Ne', name: 'Neon', number: 10, group: 'noble gas'},
+            {symbol: 'Na', name: 'Sodium', number: 11, group: 'alkali metal'},
+            {symbol: 'Mg', name: 'Magnesium', number: 12, group: 'alkaline earth'},
+            {symbol: 'Al', name: 'Aluminum', number: 13, group: 'metal'},
+            {symbol: 'Si', name: 'Silicon', number: 14, group: 'metalloid'},
+            {symbol: 'P', name: 'Phosphorus', number: 15, group: 'nonmetal'},
+            {symbol: 'S', name: 'Sulfur', number: 16, group: 'nonmetal'},
+            {symbol: 'Cl', name: 'Chlorine', number: 17, group: 'halogen'},
+            {symbol: 'Ar', name: 'Argon', number: 18, group: 'noble gas'},
+            {symbol: 'K', name: 'Potassium', number: 19, group: 'alkali metal'},
+            {symbol: 'Ca', name: 'Calcium', number: 20, group: 'alkaline earth'},
+            {symbol: 'Sc', name: 'Scandium', number: 21, group: 'transition metal'},
+            {symbol: 'Ti', name: 'Titanium', number: 22, group: 'transition metal'},
+            {symbol: 'V', name: 'Vanadium', number: 23, group: 'transition metal'},
+            {symbol: 'Cr', name: 'Chromium', number: 24, group: 'transition metal'},
+            {symbol: 'Mn', name: 'Manganese', number: 25, group: 'transition metal'},
+            {symbol: 'Fe', name: 'Iron', number: 26, group: 'transition metal'},
+            {symbol: 'Co', name: 'Cobalt', number: 27, group: 'transition metal'},
+            {symbol: 'Ni', name: 'Nickel', number: 28, group: 'transition metal'},
+            {symbol: 'Cu', name: 'Copper', number: 29, group: 'transition metal'},
+            {symbol: 'Zn', name: 'Zinc', number: 30, group: 'transition metal'},
+            {symbol: 'Ga', name: 'Gallium', number: 31, group: 'metal'},
+            {symbol: 'Ge', name: 'Germanium', number: 32, group: 'metalloid'},
+            {symbol: 'As', name: 'Arsenic', number: 33, group: 'metalloid'},
+            {symbol: 'Se', name: 'Selenium', number: 34, group: 'nonmetal'},
+            {symbol: 'Br', name: 'Bromine', number: 35, group: 'halogen'},
+            {symbol: 'Kr', name: 'Krypton', number: 36, group: 'noble gas'},
+            {symbol: 'Rb', name: 'Rubidium', number: 37, group: 'alkali metal'},
+            {symbol: 'Sr', name: 'Strontium', number: 38, group: 'alkaline earth'},
+            {symbol: 'Y', name: 'Yttrium', number: 39, group: 'transition metal'},
+            {symbol: 'Zr', name: 'Zirconium', number: 40, group: 'transition metal'},
+            {symbol: 'Nb', name: 'Niobium', number: 41, group: 'transition metal'},
+            {symbol: 'Mo', name: 'Molybdenum', number: 42, group: 'transition metal'},
+            {symbol: 'Tc', name: 'Technetium', number: 43, group: 'transition metal'},
+            {symbol: 'Ru', name: 'Ruthenium', number: 44, group: 'transition metal'},
+            {symbol: 'Rh', name: 'Rhodium', number: 45, group: 'transition metal'},
+            {symbol: 'Pd', name: 'Palladium', number: 46, group: 'transition metal'},
+            {symbol: 'Ag', name: 'Silver', number: 47, group: 'transition metal'},
+            {symbol: 'Cd', name: 'Cadmium', number: 48, group: 'transition metal'},
+            {symbol: 'In', name: 'Indium', number: 49, group: 'metal'},
+            {symbol: 'Sn', name: 'Tin', number: 50, group: 'metal'},
+            {symbol: 'Sb', name: 'Antimony', number: 51, group: 'metalloid'},
+            {symbol: 'Te', name: 'Tellurium', number: 52, group: 'metalloid'},
+            {symbol: 'I', name: 'Iodine', number: 53, group: 'halogen'},
+            {symbol: 'Xe', name: 'Xenon', number: 54, group: 'noble gas'},
+            {symbol: 'Cs', name: 'Cesium', number: 55, group: 'alkali metal'},
+            {symbol: 'Ba', name: 'Barium', number: 56, group: 'alkaline earth'},
+            {symbol: 'La', name: 'Lanthanum', number: 57, group: 'lanthanide'},
+            {symbol: 'Ce', name: 'Cerium', number: 58, group: 'lanthanide'},
+            {symbol: 'Pr', name: 'Praseodymium', number: 59, group: 'lanthanide'},
+            {symbol: 'Nd', name: 'Neodymium', number: 60, group: 'lanthanide'},
+            {symbol: 'Pm', name: 'Promethium', number: 61, group: 'lanthanide'},
+            {symbol: 'Sm', name: 'Samarium', number: 62, group: 'lanthanide'},
+            {symbol: 'Eu', name: 'Europium', number: 63, group: 'lanthanide'},
+            {symbol: 'Gd', name: 'Gadolinium', number: 64, group: 'lanthanide'},
+            {symbol: 'Tb', name: 'Terbium', number: 65, group: 'lanthanide'},
+            {symbol: 'Dy', name: 'Dysprosium', number: 66, group: 'lanthanide'},
+            {symbol: 'Ho', name: 'Holmium', number: 67, group: 'lanthanide'},
+            {symbol: 'Er', name: 'Erbium', number: 68, group: 'lanthanide'},
+            {symbol: 'Tm', name: 'Thulium', number: 69, group: 'lanthanide'},
+            {symbol: 'Yb', name: 'Ytterbium', number: 70, group: 'lanthanide'},
+            {symbol: 'Lu', name: 'Lutetium', number: 71, group: 'lanthanide'},
+            {symbol: 'Hf', name: 'Hafnium', number: 72, group: 'transition metal'},
+            {symbol: 'Ta', name: 'Tantalum', number: 73, group: 'transition metal'},
+            {symbol: 'W', name: 'Tungsten', number: 74, group: 'transition metal'},
+            {symbol: 'Re', name: 'Rhenium', number: 75, group: 'transition metal'},
+            {symbol: 'Os', name: 'Osmium', number: 76, group: 'transition metal'},
+            {symbol: 'Ir', name: 'Iridium', number: 77, group: 'transition metal'},
+            {symbol: 'Pt', name: 'Platinum', number: 78, group: 'transition metal'},
+            {symbol: 'Au', name: 'Gold', number: 79, group: 'transition metal'},
+            {symbol: 'Hg', name: 'Mercury', number: 80, group: 'transition metal'},
+            {symbol: 'Tl', name: 'Thallium', number: 81, group: 'metal'},
+            {symbol: 'Pb', name: 'Lead', number: 82, group: 'metal'},
+            {symbol: 'Bi', name: 'Bismuth', number: 83, group: 'metal'},
+            {symbol: 'Po', name: 'Polonium', number: 84, group: 'metalloid'},
+            {symbol: 'At', name: 'Astatine', number: 85, group: 'halogen'},
+            {symbol: 'Rn', name: 'Radon', number: 86, group: 'noble gas'},
+            {symbol: 'Fr', name: 'Francium', number: 87, group: 'alkali metal'},
+            {symbol: 'Ra', name: 'Radium', number: 88, group: 'alkaline earth'},
+            {symbol: 'Ac', name: 'Actinium', number: 89, group: 'actinide'},
+            {symbol: 'Th', name: 'Thorium', number: 90, group: 'actinide'},
+            {symbol: 'Pa', name: 'Protactinium', number: 91, group: 'actinide'},
+            {symbol: 'U', name: 'Uranium', number: 92, group: 'actinide'},
+            {symbol: 'Np', name: 'Neptunium', number: 93, group: 'actinide'},
+            {symbol: 'Pu', name: 'Plutonium', number: 94, group: 'actinide'},
+            {symbol: 'Am', name: 'Americium', number: 95, group: 'actinide'},
+            {symbol: 'Cm', name: 'Curium', number: 96, group: 'actinide'},
+            {symbol: 'Bk', name: 'Berkelium', number: 97, group: 'actinide'},
+            {symbol: 'Cf', name: 'Californium', number: 98, group: 'actinide'},
+            {symbol: 'Es', name: 'Einsteinium', number: 99, group: 'actinide'},
+            {symbol: 'Fm', name: 'Fermium', number: 100, group: 'actinide'},
+            {symbol: 'Md', name: 'Mendelevium', number: 101, group: 'actinide'},
+            {symbol: 'No', name: 'Nobelium', number: 102, group: 'actinide'},
+            {symbol: 'Lr', name: 'Lawrencium', number: 103, group: 'actinide'},
+            {symbol: 'Rf', name: 'Rutherfordium', number: 104, group: 'transition metal'},
+            {symbol: 'Db', name: 'Dubnium', number: 105, group: 'transition metal'},
+            {symbol: 'Sg', name: 'Seaborgium', number: 106, group: 'transition metal'},
+            {symbol: 'Bh', name: 'Bohrium', number: 107, group: 'transition metal'},
+            {symbol: 'Hs', name: 'Hassium', number: 108, group: 'transition metal'},
+            {symbol: 'Mt', name: 'Meitnerium', number: 109, group: 'transition metal'},
+            {symbol: 'Ds', name: 'Darmstadtium', number: 110, group: 'transition metal'},
+            {symbol: 'Rg', name: 'Roentgenium', number: 111, group: 'transition metal'},
+            {symbol: 'Cn', name: 'Copernicium', number: 112, group: 'transition metal'},
+            {symbol: 'Nh', name: 'Nihonium', number: 113, group: 'metal'},
+            {symbol: 'Fl', name: 'Flerovium', number: 114, group: 'metal'},
+            {symbol: 'Mc', name: 'Moscovium', number: 115, group: 'metal'},
+            {symbol: 'Lv', name: 'Livermorium', number: 116, group: 'metal'},
+            {symbol: 'Ts', name: 'Tennessine', number: 117, group: 'halogen'},
+            {symbol: 'Og', name: 'Oganesson', number: 118, group: 'noble gas'}
+        ];
+
+        let currentPage = 'landing';
+        let selectedElements = [];
+        let requiredElementCount = 2;
+        let scene, camera, renderer;
+        let animationId = null;
+        let isAnimating = false;
+
+        // Navigation Functions
+        function showPage(page) {
+            document.getElementById('landingPage').classList.add('hidden');
+            document.getElementById('menuSection').classList.add('hidden');
+            document.getElementById('reactionSection').classList.add('hidden');
+            document.getElementById('businessSection').classList.add('hidden');
+            document.getElementById('marketingSection').classList.add('hidden');
+            document.getElementById('generalSection').classList.add('hidden');
+
+            if (page === 'landing') {
+                document.getElementById('landingPage').classList.remove('hidden');
+            } else if (page === 'menu') {
+                document.getElementById('menuSection').classList.remove('hidden');
+            } else if (page === 'reaction') {
+                document.getElementById('reactionSection').classList.remove('hidden');
+            } else if (page === 'business') {
+                document.getElementById('businessSection').classList.remove('hidden');
+            } else if (page === 'marketing') {
+                document.getElementById('marketingSection').classList.remove('hidden');
+            } else if (page === 'general') {
+                document.getElementById('generalSection').classList.remove('hidden');
+            }
+
+            currentPage = page;
+        }
+
+        function goBack() {
+            resetReaction();
+            showPage('menu');
+        }
+
+        function selectCategory(category) {
+            if (category === 'reaction') {
+                showPage('reaction');
+                resetReaction();
+            } else if (category === 'business') {
+                showPage('business');
+            } else if (category === 'marketing') {
+                showPage('marketing');
+            } else if (category === 'general') {
+                showPage('general');
+            }
+        }
+
+        // Start Button
+        document.getElementById('startBtn').addEventListener('click', () => {
+            showPage('menu');
+        });
+
+        // Reaction Learning Functions
+        function proceedToSelection() {
+            const count = parseInt(document.getElementById('elementCount').value);
+            if (count < 2 || count > 5) {
+                alert('Please enter a number between 2 and 5');
+                return;
+            }
+            requiredElementCount = count;
+            selectedElements = [];
+            renderElementsGrid();
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
+            updateSelectionNote();
+        }
+
+        function renderElementsGrid() {
+            const grid = document.getElementById('elementsGrid');
+            grid.innerHTML = '';
+            elements.forEach(element => {
+                const btn = document.createElement('button');
+                btn.className = 'element-btn';
+                btn.innerHTML = `<div class="element-symbol">${element.symbol}</div><div class="element-number">${element.number}</div>`;
+                btn.onclick = () => toggleElement(element);
+                grid.appendChild(btn);
+            });
+        }
+
+        function toggleElement(element) {
+            const index = selectedElements.findIndex(e => e.symbol === element.symbol);
+            if (index > -1) {
+                selectedElements.splice(index, 1);
+            } else if (selectedElements.length < requiredElementCount) {
+                selectedElements.push(element);
+            } else {
+                alert(`You can only select ${requiredElementCount} element(s)`);
+                return;
+            }
+            updateElementDisplay();
+            updateSelectionNote();
+        }
+
+        function updateElementDisplay() {
+            document.querySelectorAll('.element-btn').forEach(btn => {
+                btn.classList.remove('selected');
+                const symbol = btn.querySelector('.element-symbol').textContent;
+                if (selectedElements.some(e => e.symbol === symbol)) {
+                    btn.classList.add('selected');
+                }
+            });
+            const showBtn = document.getElementById('showReactionBtn');
+            showBtn.disabled = selectedElements.length !== requiredElementCount;
+        }
+
+        function updateSelectionNote() {
+            const remaining = requiredElementCount - selectedElements.length;
+            document.getElementById('selectionNote').textContent = 
+                remaining > 0 ? `Select ${remaining} more element(s)` : 'Ready to show reaction!';
+            
+            // Auto-show reaction when all elements are selected
+            if (selectedElements.length === requiredElementCount) {
+                setTimeout(() => {
+                    showReaction();
+                }, 500);
+            }
+        }
+
+        // Toggle functions for expandable topic cards
+        function toggleBusinessTopic(topic, element) {
+            const details = element.querySelector('.topic-details');
+            details.classList.toggle('hidden');
+        }
+        
+        function toggleMarketingTopic(topic, element) {
+            const details = element.querySelector('.topic-details');
+            details.classList.toggle('hidden');
+        }
+        
+        function toggleKnowledgeTopic(topic, element) {
+            const details = element.querySelector('.topic-details');
+            details.classList.toggle('hidden');
+        }
+        
+        // Daily marketing focus function
+        function getMarketingDailyFocus() {
+            const focuses = [
+                { day: 0, title: '\ud83d\udcf1 Sunday Insight: Social Media Marketing Trends', tip: 'Focus on platform-specific strategies and engagement techniques used by successful brands.' },
+                { day: 1, title: '\ud83d\udca1 Monday Motivation: Brand Strategy Deep Dive', tip: 'Start your week by refining your brand positioning and unique value proposition.' },
+                { day: 2, title: '\ud83d\udcca Tuesday Metrics: Analytics & Performance Tracking', tip: 'Analyze your marketing KPIs and identify optimization opportunities.' },
+                { day: 3, title: '\u270d\ufe0f Wednesday Writing: Content Marketing Mastery', tip: 'Create high-quality, SEO-optimized content that resonates with your audience.' },
+                { day: 4, title: '\ud83d\udd0d Thursday Search: SEO & SEM Strategies', tip: 'Optimize your paid and organic search presence for maximum visibility.' },
+                { day: 5, title: '\ud83c\udfaf Friday Focus: Market Research & Consumer Insights', tip: 'Gather consumer data and market intelligence to inform strategic decisions.' },
+                { day: 6, title: '\ud83d\ude80 Saturday Success: Digital Marketing Integration', tip: 'Create cohesive multi-channel campaigns that work together synergistically.' }
+            ];
+            
+            const today = new Date().getDay();
+            return focuses[today];
+        }
+        
+        // Initialize marketing focus on page load
+        window.addEventListener('load', () => {
+            const focus = getMarketingDailyFocus();
+            const focusElement = document.getElementById('marketingFocus');
+            if (focusElement) {
+                focusElement.textContent = focus.title;
+            }
+        });
+
+        function showReaction() {
+            if (selectedElements.length !== requiredElementCount) {
+                alert(`Please select ${requiredElementCount} element(s)`);
+                return;
+            }
+
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('reactionDisplay').classList.remove('hidden');
+
+            // Display selected elements
+            const elementsList = document.getElementById('selectedElementsList');
+            elementsList.innerHTML = selectedElements.map(e => 
+                `<span class="element-tag">${e.symbol} (${e.name})</span>`
+            ).join('');
+
+            // Generate reaction info
+            generateReactionInfo();
+
+            // Initialize and render 3D visualizations
+            setTimeout(() => {
+                initializeThreeDVisualization();
+                initializeProductVisualization();
+            }, 100);
+        }
+
+        function generateReactionInfo() {
+            const symbols = selectedElements.map(e => e.symbol).join(' + ');
+            const reactionData = getReactionData(selectedElements);
+
+            document.getElementById('reactionFormula').textContent = reactionData.formula;
+            document.getElementById('reactionDescription').textContent = reactionData.description;
+            document.getElementById('reactionReason').textContent = reactionData.reason;
+            document.getElementById('reactionApplication').textContent = reactionData.application;
+            
+            // Display element details
+            displayElementDetails();
+            
+            // Display balanced atoms
+            if (reactionData.atomBalance) {
+                document.getElementById('atomBalance').innerHTML = reactionData.atomBalance;
+                document.getElementById('balancedAtomsSection').classList.remove('hidden');
+            }
+            
+            // Display product information
+            if (reactionData.product) {
+                document.getElementById('productName').innerHTML = reactionData.product;
+                document.getElementById('productInfo').textContent = reactionData.productInfo;
+                document.getElementById('productSection').classList.remove('hidden');
+                
+                // Show product visualization based on reaction type
+                if (reactionData.productType) {
+                    document.getElementById('productVisualization').classList.remove('hidden');
+                    document.getElementById('productVisualization').dataset.productType = reactionData.productType;
+                    
+                    // Display reaction conditions
+                    displayReactionConditions(reactionData.productType);
+                }
+            } else {
+                document.getElementById('productSection').classList.add('hidden');
+                document.getElementById('productVisualization').classList.add('hidden');
+            }
+        }
+
+        function displayElementDetails() {
+            let detailsHTML = '';
+            selectedElements.forEach((element, index) => {
+                detailsHTML += `
+                    <div class="element-detail-item">
+                        <strong>Element ${index + 1}:</strong> ${element.name} (${element.symbol})<br>
+                        <strong>Atomic Number:</strong> ${element.number}<br>
+                        <strong>Element Type:</strong> ${element.group}<br>
+                        <strong>Common Properties:</strong> Highly reactive ${element.group} in the periodic table
+                    </div>
+                `;
+            });
+            document.getElementById('elementDetailsContent').innerHTML = detailsHTML;
+        }
+
+        function getConditionData(reactionType) {
+            const conditions = {
+                'water': {
+                    temperature: {
+                        title: '🌡️ Temperature',
+                        effect: 'This reaction is EXOTHERMIC - it releases heat. At higher temperatures, the reaction proceeds more rapidly. However, temperatures above 2000°C can break water molecules apart (photodissociation).'
+                    },
+                    pressure: {
+                        title: '💨 Pressure',
+                        effect: 'Moderate pressure favors water formation. High pressure can suppress the reaction slightly because water is denser than the reactants. Atmospheric pressure is ideal for this reaction.'
+                    },
+                    catalyst: {
+                        title: '🔬 Catalyst',
+                        effect: 'A platinum catalyst can speed up this reaction at lower temperatures. However, the reaction is naturally fast enough between H₂ and O₂ that catalysts are not always necessary.'
+                    },
+                    light: {
+                        title: '💡 Light/Radiation',
+                        effect: 'UV light can initiate the H₂ + O₂ reaction explosively, but regular visible light does not significantly affect it. The reaction occurs readily at room temperature without light.'
+                    }
+                },
+                'methane': {
+                    temperature: {
+                        title: '🌡️ Temperature',
+                        effect: 'The Haber-Bosch process for making methane requires high temperature (150-300°C) and high pressure. Very high temperatures can decompose methane back into carbon and hydrogen.'
+                    },
+                    pressure: {
+                        title: '💨 Pressure',
+                        effect: 'High pressure (150-300 atm) is ESSENTIAL for methane formation! Higher pressure shifts equilibrium toward products and increases conversion rate significantly.'
+                    },
+                    catalyst: {
+                        title: '🔬 Catalyst',
+                        effect: 'Iron-based catalysts (especially promoted with potassium) are crucial for methane synthesis. Without a catalyst, the reaction is too slow to be practical.'
+                    },
+                    concentration: {
+                        title: '⚖️ Concentration',
+                        effect: 'Higher concentrations of H₂ and C reactants shift the equilibrium toward product formation. A 3:1 ratio of H₂:C is commonly used in industrial processes.'
+                    }
+                },
+                'carbonDioxide': {
+                    temperature: {
+                        title: '🌡️ Temperature',
+                        effect: 'This combustion reaction is HIGHLY EXOTHERMIC. It releases ~393 kJ/mol of energy. Higher temperatures speed up the reaction but don\'t favor product formation (reverse reaction increases).'
+                    },
+                    oxygen: {
+                        title: '💨 Oxygen Supply',
+                        effect: 'Excess oxygen ensures complete combustion to CO₂. With insufficient oxygen, incomplete combustion can produce toxic CO (carbon monoxide) instead.'
+                    },
+                    catalyst: {
+                        title: '🔬 Catalyst',
+                        effect: 'This reaction does not require a catalyst - it proceeds readily with direct contact between carbon and oxygen. The reaction is self-sustaining once initiated.'
+                    },
+                    light: {
+                        title: '💡 Light',
+                        effect: 'Light is not necessary, but burning carbon produces its own heat and light. This is a classic exothermic reaction used in combustion engines and power generation.'
+                    }
+                },
+                'salt': {
+                    temperature: {
+                        title: '🌡️ Temperature',
+                        effect: 'The Na + Cl₂ reaction is naturally exothermic and very vigorous. Heating accelerates it dramatically - sodium can spontaneously ignite near room temperature.'
+                    },
+                    moisture: {
+                        title: '💧 Moisture/Water',
+                        effect: 'Water enhances this reaction as sodium reacts with both chlorine and water. This reaction must be done in dry conditions to prevent violent side reactions.'
+                    },
+                    light: {
+                        title: '💡 Light',
+                        effect: 'Light is not necessary but can enhance the reaction rate. The yellow glow you see in a sodium-chlorine reaction is the heat energy being released.'
+                    },
+                    confinement: {
+                        title: '🔒 Container',
+                        effect: 'This reaction must be done carefully in a controlled environment. Sodium is stored under mineral oil to prevent reaction with air and moisture.'
+                    }
+                },
+                'ammonia': {
+                    temperature: {
+                        title: '🌡️ Temperature',
+                        effect: 'The Haber-Bosch process uses 400-500°C. Ammonia formation is EXOTHERMIC, so lower temperatures favor products, but reaction is too slow below 400°C. A balance is needed.'
+                    },
+                    pressure: {
+                        title: '💨 Pressure',
+                        effect: 'Very high pressure (150-300 atm) is CRITICAL! The forward reaction reduces gas volume (4 moles → 2 moles), so high pressure strongly favors ammonia formation.'
+                    },
+                    catalyst: {
+                        title: '🔬 Catalyst',
+                        effect: 'Iron catalyst (promoted with potassium and aluminum oxides) is ESSENTIAL. Without it, the reaction is impractically slow even at high temperature and pressure.'
+                    },
+                    concentration: {
+                        title: '⚖️ Concentration (H₂:N₂ ratio)',
+                        effect: 'A 3:1 ratio of H₂:N₂ is used industrially. This excess hydrogen helps drive the equilibrium toward ammonia and ensures good conversion rates.'
+                    }
+                },
+                'carbonMonoxide': {
+                    temperature: {
+                        title: '🌡️ Temperature',
+                        effect: 'High temperature (above 700°C) strongly favors NO formation from N₂ and O₂. This is why nitrogen oxides form in high-temperature combustion like in car engines.'
+                    },
+                    pressure: {
+                        title: '💨 Pressure',
+                        effect: 'Pressure has minimal effect on this reaction. Both forward and reverse reactions involve the same number of gas molecules (2 moles → 2 moles).'
+                    },
+                    concentration: {
+                        title: '⚖️ Oxygen Concentration',
+                        effect: 'Higher oxygen concentration favors NO formation. This is why high oxygen and high temperatures (as in combustion) produce significant nitrogen oxide pollution.'
+                    },
+                    cooling: {
+                        title: '❄️ Rapid Cooling',
+                        effect: 'Rapid quenching/cooling after combustion preserves NO molecules. Without cooling, NO would decompose back to N₂ and O₂ at lower temperatures.'
+                    }
+                },
+                'default': {
+                    temperature: {
+                        title: '🌡️ Temperature',
+                        effect: 'Temperature affects reaction rate and equilibrium. Increasing temperature speeds up reactions but may shift equilibrium in either direction depending on whether the reaction is exothermic or endothermic.'
+                    },
+                    pressure: {
+                        title: '💨 Pressure',
+                        effect: 'Pressure affects reactions involving gases. According to Le Chatelier\'s principle, increasing pressure favors the side with fewer gas molecules.'
+                    },
+                    catalyst: {
+                        title: '🔬 Catalyst',
+                        effect: 'Catalysts speed up reactions by lowering activation energy. They are not consumed in the reaction and allow reactions to reach equilibrium faster.'
+                    },
+                    concentration: {
+                        title: '⚖️ Concentration',
+                        effect: 'Increasing reactant concentration typically increases reaction rate and shifts equilibrium toward products, following Le Chatelier\'s principle.'
+                    }
+                }
+            };
+            return conditions[reactionType] || conditions['default'];
+        }
+
+        function displayReactionConditions(reactionType) {
+            const conditionsSection = document.getElementById('reactionConditions');
+            const conditionsGrid = document.getElementById('conditionsGrid');
+            const conditionInfo = document.getElementById('conditionInfo');
+            
+            const conditionData = getConditionData(reactionType);
+            
+            conditionsGrid.innerHTML = '';
+            conditionInfo.style.display = 'none';
+            
+            // Create condition buttons
+            Object.keys(conditionData).forEach(key => {
+                const btn = document.createElement('button');
+                btn.className = 'condition-btn';
+                btn.textContent = conditionData[key].title.split(' ')[1]; // Get just the label part
+                btn.onclick = () => showConditionInfo(conditionData[key], btn);
+                conditionsGrid.appendChild(btn);
+            });
+            
+            conditionsSection.classList.remove('hidden');
+        }
+        
+        function showConditionInfo(condition, button) {
+            const conditionInfo = document.getElementById('conditionInfo');
+            // Remove active class from all buttons
+            document.querySelectorAll('.condition-btn').forEach(btn => btn.classList.remove('active'));
+            // Add active class to clicked button
+            button.classList.add('active');
+            
+            conditionInfo.innerHTML = `
+                <h4>${condition.title}</h4>
+                <p>${condition.effect}</p>
+            `;
+            conditionInfo.style.display = 'block';
+        }
+
+        function getReactionData(elements) {
+            // Sample reactions for common element combinations
+            const combos = {
+                'H+O': {
+                    formula: '2H₂ + O₂ → 2H₂O',
+                    product: 'Water (H₂O)',
+                    productType: 'water',
+                    productInfo: 'A colorless, odorless liquid that is essential for all known forms of life. Water has unique properties like high heat capacity and polarity.',
+                    atomBalance: '<div class="atom-breakdown">Reactants: 4 Hydrogen atoms + 2 Oxygen atoms = 6 atoms total</div><div class="atom-breakdown">Products: 2 Water molecules (each with 2H + 1O) = 6 atoms total ✓ Balanced</div>',
+                    description: 'This is the combustion of hydrogen with oxygen, one of the most important reactions in chemistry. It produces water and releases significant energy.',
+                    reason: 'Hydrogen and oxygen react vigorously to form water molecules. This is an exothermic reaction, meaning it releases heat and light energy.',
+                    application: 'This reaction is used in rocket fuel, fuel cells for clean energy, and water purification processes.'
+                },
+                'H+C': {
+                    formula: 'C + 2H₂ → CH₄',
+                    product: 'Methane (CH₄)',
+                    productType: 'methane',
+                    productInfo: 'A colorless, odorless gas that is the simplest hydrocarbon. Methane molecules consist of one carbon atom bonded to four hydrogen atoms.',
+                    atomBalance: '<div class="atom-breakdown">Reactants: 1 Carbon atom + 4 Hydrogen atoms = 5 atoms total</div><div class="atom-breakdown">Products: 1 Methane molecule (1C + 4H) = 5 atoms total ✓ Balanced</div>',
+                    description: 'The formation of methane from carbon and hydrogen is a synthesis reaction that demonstrates how simple elements combine to form organic compounds.',
+                    reason: 'Under high temperature and pressure with proper catalysts, carbon and hydrogen combine to form methane, the simplest hydrocarbon.',
+                    application: 'Methane is the primary component of natural gas, used for heating, cooking, and electricity generation worldwide.'
+                },
+                'O+C': {
+                    formula: 'C + O₂ → CO₂',
+                    product: 'Carbon Dioxide (CO₂)',
+                    productType: 'carbonDioxide',
+                    productInfo: 'A colorless gas with a faint sharp, acidic odor. CO₂ is essential for photosynthesis and is a key greenhouse gas in Earth\'s atmosphere.',
+                    atomBalance: '<div class="atom-breakdown">Reactants: 1 Carbon atom + 2 Oxygen atoms = 3 atoms total</div><div class="atom-breakdown">Products: 1 CO₂ molecule (1C + 2O) = 3 atoms total ✓ Balanced</div>',
+                    description: 'The combustion of carbon produces carbon dioxide, a crucial reaction in chemistry and environmental science. It\'s highly exothermic.',
+                    reason: 'Carbon oxidizes in the presence of oxygen to form carbon dioxide. This reaction releases significant thermal energy.',
+                    application: 'This reaction occurs in combustion engines, power plants, and is part of the natural carbon cycle in our atmosphere.'
+                },
+                'N+O': {
+                    formula: 'N₂ + O₂ → 2NO (at high temperature)',
+                    product: 'Nitrogen Monoxide (NO)',
+                    productType: 'carbonMonoxide',
+                    productInfo: 'A colorless gas that is important in atmospheric chemistry. NO is produced in high-temperature combustion and plays a role in ozone depletion.',
+                    atomBalance: '<div class="atom-breakdown">Reactants: 2 Nitrogen atoms + 2 Oxygen atoms = 4 atoms total</div><div class="atom-breakdown">Products: 2 NO molecules (each 1N + 1O) = 4 atoms total ✓ Balanced</div>',
+                    description: 'Nitrogen and oxygen combine at high temperatures to form nitrogen monoxide, important in atmospheric chemistry.',
+                    reason: 'At high temperatures (like lightning or in combustion), nitrogen and oxygen overcome their chemical stability to form nitrogen oxides.',
+                    application: 'Important in atmospheric chemistry, contributes to air quality studies, and relevant in combustion processes.'
+                },
+                'Na+Cl': {
+                    formula: '2Na + Cl₂ → 2NaCl',
+                    product: 'Sodium Chloride (NaCl)',
+                    productType: 'salt',
+                    productInfo: 'Common table salt - a white crystalline solid. NaCl is an ionic compound where sodium cations are bonded to chloride anions in a 1:1 ratio.',
+                    atomBalance: '<div class="atom-breakdown">Reactants: 2 Sodium atoms + 2 Chlorine atoms = 4 atoms total</div><div class="atom-breakdown">Products: 2 NaCl molecules (each 1Na + 1Cl) = 4 atoms total ✓ Balanced</div>',
+                    description: 'Sodium and chlorine react violently and spectacularly to form sodium chloride (table salt). This is a classic ionic reaction.',
+                    reason: 'Sodium (highly reactive metal) and chlorine (reactive nonmetal) attract each other strongly to form an ionic compound with complete electron transfer.',
+                    application: 'Table salt is essential for human health, food preservation, and is used in chemical industries.'
+                },
+                'Fe+O': {
+                    formula: '4Fe + 3O₂ → 2Fe₂O₃',
+                    product: 'Iron Oxide (Fe₂O₃)',
+                    productType: 'ironOxide',
+                    productInfo: 'Commonly known as rust or hematite. This red-brown compound forms when iron is exposed to oxygen. It is chemically stable but reduces the durability of iron structures.',
+                    atomBalance: '<div class="atom-breakdown">Reactants: 4 Iron atoms + 6 Oxygen atoms = 10 atoms total</div><div class="atom-breakdown">Products: 2 Fe₂O₃ molecules (each 2Fe + 3O) = 10 atoms total ✓ Balanced</div>',
+                    description: 'Iron combines with oxygen to form iron oxide (rust). This is an important corrosion reaction affecting metals worldwide.',
+                    reason: 'Iron readily oxidizes when exposed to oxygen and moisture, forming iron oxide through a series of reactions.',
+                    application: 'Understanding this reaction is crucial for corrosion prevention, materials science, and iron production industries.'
+                },
+                'Ca+O': {
+                    formula: '2Ca + O₂ → 2CaO',
+                    product: 'Calcium Oxide (CaO)',
+                    productType: 'calciumOxide',
+                    productInfo: 'Also known as quicklime or burnt lime. This white crystalline solid is highly reactive with water and heat, making it useful in many industrial processes.',
+                    atomBalance: '<div class="atom-breakdown">Reactants: 2 Calcium atoms + 2 Oxygen atoms = 4 atoms total</div><div class="atom-breakdown">Products: 2 CaO molecules (each 1Ca + 1O) = 4 atoms total ✓ Balanced</div>',
+                    description: 'Calcium combines with oxygen to form calcium oxide (quicklime), an important industrial chemical.',
+                    reason: 'Calcium is a reactive alkaline earth metal that readily combines with oxygen to form a stable ionic compound.',
+                    application: 'Calcium oxide is used in cement production, water treatment, and as a desiccant in various industries.'
+                },
+                'H+N': {
+                    formula: 'N₂ + 3H₂ → 2NH₃ (Haber-Bosch Process)',
+                    product: 'Ammonia (NH₃)',
+                    productType: 'ammonia',
+                    productInfo: 'A colorless gas with a pungent smell. NH₃ is polar and highly soluble in water. It is one of the most important chemicals in industry.',
+                    atomBalance: '<div class="atom-breakdown">Reactants: 2 Nitrogen atoms + 6 Hydrogen atoms = 8 atoms total</div><div class="atom-breakdown">Products: 2 NH₃ molecules (each 1N + 3H) = 8 atoms total ✓ Balanced</div>',
+                    description: 'Nitrogen and hydrogen combine to form ammonia, one of the most important reactions in industrial chemistry.',
+                    reason: 'Under high pressure, temperature, and with an iron catalyst, nitrogen and hydrogen overcome their stability to form ammonia.',
+                    application: 'Ammonia is used for fertilizer production (feeding billions of people), explosives, and as a cleaning agent.'
+                },
+                'C+H': {
+                    formula: 'nC + 2nH₂ → CₙH₂ₙ',
+                    product: 'Hydrocarbons',
+                    productInfo: 'Organic compounds made of carbon and hydrogen atoms. They can be gases, liquids, or solids depending on their structure and size.',
+                    atomBalance: '<div class="atom-breakdown">General formula: For every Carbon atom, 2 Hydrogen atoms are bonded</div><div class="atom-breakdown">Example: 1 C + 2 H₂ → CH₄ (1C + 4H) ✓ Atoms balanced</div>',
+                    description: 'Carbon and hydrogen form hydrocarbons, the basis of organic chemistry and fossil fuels.',
+                    reason: 'Carbon and hydrogen have ideal bonding properties for forming stable chains and rings, creating the foundation of all organic molecules.',
+                    application: 'Hydrocarbons form the basis of fuels, plastics, textiles, and countless organic compounds essential to modern life.'
+                },
+                'S+O': {
+                    formula: 'S + O₂ → SO₂',
+                    product: 'Sulfur Dioxide (SO₂)',
+                    productType: 'sulfurDioxide',
+                    productInfo: 'A colorless gas with a sharp, acidic smell. SO₂ is a major air pollutant from burning fossil fuels and has both harmful and industrial uses.',
+                    atomBalance: '<div class="atom-breakdown">Reactants: 1 Sulfur atom + 2 Oxygen atoms = 3 atoms total</div><div class="atom-breakdown">Products: 1 SO₂ molecule (1S + 2O) = 3 atoms total ✓ Balanced</div>',
+                    description: 'Sulfur burns in oxygen to form sulfur dioxide, a toxic gas important in industrial chemistry.',
+                    reason: 'Sulfur undergoes oxidation in the presence of oxygen to form a covalent compound with significant industrial importance.',
+                    application: 'Sulfur dioxide is used in bleaching, wine preservation, and is a key compound in sulfuric acid production.'
+                }
+            };
+
+            // Create key from sorted element symbols
+            let key = selectedElements.map(e => e.symbol).sort().join('+');
+            
+            if (combos[key]) {
+                return combos[key];
+            } else {
+                // Generate generic reaction for unknown combinations
+                const formula = selectedElements.map(e => e.symbol).join(' + ') + ' → [Product]';
+                return {
+                    formula: formula,
+                    product: 'Reaction Product',
+                    productInfo: 'The product formed from this combination would depend on the specific conditions such as temperature, pressure, and the presence of catalysts.',
+                    atomBalance: '<div class="atom-breakdown">Reactants: ' + selectedElements.length + ' different elements involved</div><div class="atom-breakdown">The atom balance depends on the specific reaction conditions and coefficients used</div>',
+                    description: `A reaction between ${selectedElements.map(e => e.name).join(' and ')}. This represents the combination of elements from different categories of the periodic table.`,
+                    reason: `${selectedElements[0].name} is a ${selectedElements[0].group} and ${selectedElements[1].name} is a ${selectedElements[1].group}. Their chemical properties would determine if they react and what products form.`,
+                    application: 'Understanding element reactivity helps us predict chemical behavior and develop new materials and compounds.'
+                };
+            }
+        }
+
+        function initializeThreeDVisualization() {
+            const container = document.getElementById('canvas3d');
+            if (!container || renderer) return; // Only initialize once
+
+            // Scene setup
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xf0f0f0);
+
+            camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.z = 15;
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.shadowMap.enabled = true;
+            container.appendChild(renderer.domElement);
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(5, 10, 5);
+            directionalLight.castShadow = true;
+            scene.add(directionalLight);
+
+            // Create element spheres
+            const colors = [0xff6b6b, 0x4ecdc4, 0x45b7d1, 0xf9ca24, 0x6c5ce7];
+            let xOffset = -5;
+
+            selectedElements.forEach((element, index) => {
+                const geometry = new THREE.SphereGeometry(1.5, 32, 32);
+                const material = new THREE.MeshPhongMaterial({ color: colors[index % colors.length] });
+                const sphere = new THREE.Mesh(geometry, material);
+                sphere.position.x = xOffset;
+                sphere.castShadow = true;
+                sphere.receiveShadow = true;
+                sphere.userData = { label: element.symbol, index: index };
+                scene.add(sphere);
+                xOffset += 6;
+            });
+
+            // Add product sphere (result of reaction)
+            if (selectedElements.length >= 2) {
+                const geometry = new THREE.SphereGeometry(2, 32, 32);
+                const material = new THREE.MeshPhongMaterial({ color: 0xffd700, emissive: 0xffaa00 });
+                const productSphere = new THREE.Mesh(geometry, material);
+                productSphere.position.y = -8;
+                productSphere.position.z = 2;
+                productSphere.castShadow = true;
+                productSphere.receiveShadow = true;
+                scene.add(productSphere);
+
+                // Add animation
+                productSphere.userData.animate = true;
+                productSphere.userData.startY = productSphere.position.y;
+                productSphere.userData.time = 0;
+            }
+
+            // Add labels
+            addLabelsToScene();
+
+            // Handle window resize
+            window.addEventListener('resize', () => onWindowResize(container));
+
+            // Animation loop
+            isAnimating = true;
+            animate();
+        }
+
+        function addLabelsToScene() {
+            // Note: Adding labels would require a text rendering library like three-text-mesh or canvas
+            // For simplicity, we're using the 3D sphere visualization
+        }
+
+        function animate() {
+            if (!isAnimating) return;
+            
+            animationId = requestAnimationFrame(animate);
+
+            // Rotate and animate elements
+            if (scene) {
+                scene.children.forEach(obj => {
+                    if (obj.userData && obj.userData.label) {
+                        obj.rotation.x += 0.01;
+                        obj.rotation.y += 0.01;
+                    }
+                    if (obj.userData && obj.userData.animate) {
+                        obj.userData.time += 0.02;
+                        obj.position.y = obj.userData.startY + Math.sin(obj.userData.time) * 2;
+                        obj.scale.set(1 + Math.sin(obj.userData.time * 0.5) * 0.1, 
+                                    1 + Math.sin(obj.userData.time * 0.5) * 0.1, 
+                                    1 + Math.sin(obj.userData.time * 0.5) * 0.1);
+                    }
+                });
+            }
+
+            if (renderer && camera && scene) {
+                renderer.render(scene, camera);
+            }
+        }
+
+        function onWindowResize(container) {
+            if (!camera || !renderer) return;
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+        }
+
+        let productScene, productCamera, productRenderer;
+        let productAnimationId = null;
+        let isProductAnimating = false;
+
+        function initializeProductVisualization() {
+            const container = document.getElementById('canvas3dProduct');
+            if (!container || productRenderer) return;
+
+            const productType = document.getElementById('productVisualization').dataset.productType;
+            if (!productType) return;
+
+            // Scene setup for product
+            productScene = new THREE.Scene();
+            productScene.background = new THREE.Color(0xfff9e6);
+
+            productCamera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+            productCamera.position.z = 8;
+
+            productRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            productRenderer.setSize(container.clientWidth, container.clientHeight);
+            productRenderer.shadowMap.enabled = true;
+            container.appendChild(productRenderer.domElement);
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+            productScene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.9);
+            directionalLight.position.set(5, 10, 5);
+            directionalLight.castShadow = true;
+            productScene.add(directionalLight);
+
+            // Create molecule based on type
+            createProductMolecule(productType);
+
+            // Handle window resize
+            window.addEventListener('resize', () => onProductWindowResize(container));
+
+            // Animation loop for product
+            isProductAnimating = true;
+            animateProduct();
+        }
+
+        function createProductMolecule(type) {
+            const colors = {
+                hydrogen: 0xffffff,
+                carbon: 0x333333,
+                oxygen: 0xff0000,
+                nitrogen: 0x3050f8,
+                sodium: 0xffb300,
+                chlorine: 0x1ff01f,
+                sulfur: 0xffff30
+            };
+
+            const atomRadius = 0.5;
+
+            if (type === 'water') {
+                // H-O-H structure
+                const oGeometry = new THREE.SphereGeometry(1, 32, 32);
+                const oMaterial = new THREE.MeshPhongMaterial({ color: colors.oxygen });
+                const oSphere = new THREE.Mesh(oGeometry, oMaterial);
+                oSphere.position.set(0, 0, 0);
+                oSphere.castShadow = true;
+                productScene.add(oSphere);
+                createLabel('O', oSphere.position, productScene);
+
+                // H atoms
+                const hGeometry = new THREE.SphereGeometry(0.6, 32, 32);
+                const hMaterial = new THREE.MeshPhongMaterial({ color: colors.hydrogen });
+                const h1 = new THREE.Mesh(hGeometry, hMaterial);
+                h1.position.set(-1.5, 1, 0);
+                h1.castShadow = true;
+                productScene.add(h1);
+                createLabel('H', h1.position, productScene);
+
+                const h2 = new THREE.Mesh(hGeometry, hMaterial);
+                h2.position.set(1.5, 1, 0);
+                h2.castShadow = true;
+                productScene.add(h2);
+                createLabel('H', h2.position, productScene);
+
+                // Bonds
+                addBond(productScene, oSphere.position, h1.position);
+                addBond(productScene, oSphere.position, h2.position);
+            } else if (type === 'methane') {
+                // CH4 - tetrahedral
+                const cGeometry = new THREE.SphereGeometry(0.8, 32, 32);
+                const cMaterial = new THREE.MeshPhongMaterial({ color: colors.carbon });
+                const cSphere = new THREE.Mesh(cGeometry, cMaterial);
+                cSphere.position.set(0, 0, 0);
+                cSphere.castShadow = true;
+                productScene.add(cSphere);
+                createLabel('C', cSphere.position, productScene);
+
+                const hGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+                const hMaterial = new THREE.MeshPhongMaterial({ color: colors.hydrogen });
+                
+                const positions = [
+                    [1.5, 1.5, 1.5],
+                    [-1.5, -1.5, 1.5],
+                    [-1.5, 1.5, -1.5],
+                    [1.5, -1.5, -1.5]
+                ];
+
+                positions.forEach((pos, index) => {
+                    const h = new THREE.Mesh(hGeometry, hMaterial);
+                    h.position.set(pos[0], pos[1], pos[2]);
+                    h.castShadow = true;
+                    productScene.add(h);
+                    createLabel('H', h.position, productScene);
+                    addBond(productScene, cSphere.position, h.position);
+                });
+            } else if (type === 'carbonDioxide') {
+                // O=C=O linear
+                const cGeometry = new THREE.SphereGeometry(0.7, 32, 32);
+                const cMaterial = new THREE.MeshPhongMaterial({ color: colors.carbon });
+                const cSphere = new THREE.Mesh(cGeometry, cMaterial);
+                cSphere.position.set(0, 0, 0);
+                cSphere.castShadow = true;
+                productScene.add(cSphere);
+                createLabel('C', cSphere.position, productScene);
+
+                const oGeometry = new THREE.SphereGeometry(0.9, 32, 32);
+                const oMaterial = new THREE.MeshPhongMaterial({ color: colors.oxygen });
+                
+                const o1 = new THREE.Mesh(oGeometry, oMaterial);
+                o1.position.set(-2, 0, 0);
+                o1.castShadow = true;
+                productScene.add(o1);
+                createLabel('O', o1.position, productScene);
+
+                const o2 = new THREE.Mesh(oGeometry, oMaterial);
+                o2.position.set(2, 0, 0);
+                o2.castShadow = true;
+                productScene.add(o2);
+                createLabel('O', o2.position, productScene);
+
+                addBond(productScene, cSphere.position, o1.position);
+                addBond(productScene, cSphere.position, o2.position);
+            } else if (type === 'salt') {
+                // Ionic structure representation
+                const naGeometry = new THREE.SphereGeometry(0.9, 32, 32);
+                const naMaterial = new THREE.MeshPhongMaterial({ color: colors.sodium });
+                const naSphere = new THREE.Mesh(naGeometry, naMaterial);
+                naSphere.position.set(-1.2, 0, 0);
+                naSphere.castShadow = true;
+                productScene.add(naSphere);
+                createLabel('Na', naSphere.position, productScene);
+
+                const clGeometry = new THREE.SphereGeometry(0.9, 32, 32);
+                const clMaterial = new THREE.MeshPhongMaterial({ color: colors.chlorine });
+                const clSphere = new THREE.Mesh(clGeometry, clMaterial);
+                clSphere.position.set(1.2, 0, 0);
+                clSphere.castShadow = true;
+                productScene.add(clSphere);
+                createLabel('Cl', clSphere.position, productScene);
+            } else if (type === 'ammonia') {
+                // NH3 - pyramidal
+                const nGeometry = new THREE.SphereGeometry(0.8, 32, 32);
+                const nMaterial = new THREE.MeshPhongMaterial({ color: colors.nitrogen });
+                const nSphere = new THREE.Mesh(nGeometry, nMaterial);
+                nSphere.position.set(0, 0, 0);
+                nSphere.castShadow = true;
+                productScene.add(nSphere);
+                createLabel('N', nSphere.position, productScene);
+
+                const hGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+                const hMaterial = new THREE.MeshPhongMaterial({ color: colors.hydrogen });
+                
+                const positions = [
+                    [1.2, 1.2, 0],
+                    [-1.2, 1.2, 0],
+                    [0, -1.2, 1.2]
+                ];
+
+                positions.forEach((pos, index) => {
+                    const h = new THREE.Mesh(hGeometry, hMaterial);
+                    h.position.set(pos[0], pos[1], pos[2]);
+                    h.castShadow = true;
+                    productScene.add(h);
+                    createLabel('H', h.position, productScene);
+                    addBond(productScene, nSphere.position, h.position);
+                });
+            }
+        }
+
+        function addBond(scene, pos1, pos2) {
+            const points = [pos1, pos2];
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+            const material = new THREE.LineBasicMaterial({ color: 0x999999, linewidth: 2 });
+            const line = new THREE.Line(geometry, material);
+            scene.add(line);
+        }
+
+        function createLabel(text, position, scene) {
+            // Create canvas texture for label
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = 256;
+            canvas.height = 256;
+
+            // Background
+            context.fillStyle = 'white';
+            context.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Border
+            context.strokeStyle = '#333';
+            context.lineWidth = 3;
+            context.strokeRect(0, 0, canvas.width, canvas.height);
+
+            // Text
+            context.fillStyle = '#333';
+            context.font = 'Bold 100px Arial';
+            context.textAlign = 'center';
+            context.textBaseline = 'middle';
+            context.fillText(text, canvas.width / 2, canvas.height / 2);
+
+            const texture = new THREE.CanvasTexture(canvas);
+            const material = new THREE.MeshBasicMaterial({ map: texture });
+            const geometry = new THREE.PlaneGeometry(1.5, 1.5);
+            const mesh = new THREE.Mesh(geometry, material);
+            mesh.position.copy(position);
+            mesh.position.z += 0.5;
+
+            // Always face camera
+            mesh.lookAt(0, 0, 10);
+            
+            scene.add(mesh);
+        }
+
+        function animateProduct() {
+            if (!isProductAnimating) return;
+
+            productAnimationId = requestAnimationFrame(animateProduct);
+
+            // Rotate molecules
+            if (productScene) {
+                productScene.children.forEach(obj => {
+                    if (obj.geometry && obj.geometry.type === 'SphereGeometry') {
+                        obj.rotation.x += 0.005;
+                        obj.rotation.y += 0.008;
+                    }
+                });
+            }
+
+            if (productRenderer && productCamera && productScene) {
+                productRenderer.render(productScene, productCamera);
+            }
+        }
+
+        function onProductWindowResize(container) {
+            if (!productCamera || !productRenderer) return;
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            productCamera.aspect = width / height;
+            productCamera.updateProjectionMatrix();
+            productRenderer.setSize(width, height);
+        }
+
+        function resetReaction() {
+            // Stop animation loops
+            isAnimating = false;
+            isProductAnimating = false;
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+            if (productAnimationId) {
+                cancelAnimationFrame(productAnimationId);
+                productAnimationId = null;
+            }
+
+            // Dispose Three.js resources for main scene
+            if (scene) {
+                scene.traverse((object) => {
+                    if (object.geometry) object.geometry.dispose();
+                    if (object.material) {
+                        if (Array.isArray(object.material)) {
+                            object.material.forEach(mat => mat.dispose());
+                        } else {
+                            object.material.dispose();
+                        }
+                    }
+                });
+            }
+
+            // Dispose Three.js resources for product scene
+            if (productScene) {
+                productScene.traverse((object) => {
+                    if (object.geometry) object.geometry.dispose();
+                    if (object.material) {
+                        if (Array.isArray(object.material)) {
+                            object.material.forEach(mat => mat.dispose());
+                        } else {
+                            object.material.dispose();
+                        }
+                    }
+                });
+            }
+
+            if (renderer) {
+                renderer.dispose();
+                if (renderer.domElement && renderer.domElement.parentNode) {
+                    renderer.domElement.parentNode.removeChild(renderer.domElement);
+                }
+            }
+
+            if (productRenderer) {
+                productRenderer.dispose();
+                if (productRenderer.domElement && productRenderer.domElement.parentNode) {
+                    productRenderer.domElement.parentNode.removeChild(productRenderer.domElement);
+                }
+            }
+
+            // Clear canvas containers completely
+            const canvas3d = document.getElementById('canvas3d');
+            if (canvas3d) {
+                canvas3d.innerHTML = '';
+            }
+
+            const canvas3dProduct = document.getElementById('canvas3dProduct');
+            if (canvas3dProduct) {
+                canvas3dProduct.innerHTML = '';
+            }
+
+            renderer = null;
+            scene = null;
+            camera = null;
+            productRenderer = null;
+            productScene = null;
+            productCamera = null;
+            selectedElements = [];
+
+            // Reset UI
+            document.getElementById('step1').classList.remove('hidden');
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('reactionDisplay').classList.add('hidden');
+            document.getElementById('elementCount').value = '2';
+            requiredElementCount = 2;
+        }
+    </script>
+</body>
+</html>
